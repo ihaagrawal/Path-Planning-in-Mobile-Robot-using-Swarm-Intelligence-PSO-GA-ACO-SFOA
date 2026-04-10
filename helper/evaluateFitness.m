@@ -1,35 +1,23 @@
 function fit = evaluateFitness(sol,map,start,goal)
 
-% Build full path
-path = [start; reshape(sol,2,[])'; goal];
+if isempty(sol) || mod(length(sol),2) ~= 0
+    fit = inf;
+    return;
+end
 
-%% -------------------------------
-%% COST COMPONENTS
-%% -------------------------------
+waypoints = reshape(sol,2,[])';
+path = [start; waypoints; goal];
 
 lengthCost = computeLength(sol,start,goal);
 smoothCost = computeSmoothness(sol,start,goal);
 
 collisionPenalty = computeCollision(path,map);
-
 distPenalty = computeObstacleDistancePenalty(path,map);
 
-%% -------------------------------
-%% HARD CONSTRAINT FOR COLLISIONS
-%% -------------------------------
-
-% If ANY collision → massive penalty
 if collisionPenalty > 0
-
-    % make colliding solutions unusable
-    fit = 1e6 + lengthCost;
-
+    fit = 1e4 + lengthCost;
     return
 end
-
-%% -------------------------------
-%% FINAL FITNESS
-%% -------------------------------
 
 fit = lengthCost ...
     + 20*smoothCost ...

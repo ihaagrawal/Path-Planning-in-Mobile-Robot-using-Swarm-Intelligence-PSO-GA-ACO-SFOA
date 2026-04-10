@@ -17,6 +17,6 @@ tri = inpolygon(X,Y,[70 85 75],[20 20 40]);
 map(tri) = 1;
 
 start = [5 5];
-goal = [95 95];
+goal  = [95 95];
 
 end

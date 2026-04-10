@@ -11,6 +11,6 @@ circle2 = (X-70).^2 + (Y-20).^2 < 12^2;
 map(circle1 | circle2) = 1;
 
 start = [5 5];
-goal = [95 95];
+goal  = [95 95];
 
 end

@@ -9,15 +9,15 @@ rects = [
     70 10 20 15
 ];
 
-for i=1:size(rects,1)
+for i = 1:size(rects,1)
     x = rects(i,1);
     y = rects(i,2);
     w = rects(i,3);
     h = rects(i,4);
-    map(x:x+w,y:y+h) = 1;
+    map(x:min(x+w,gridSize), y:min(y+h,gridSize)) = 1;
 end
 
 start = [5 5];
-goal = [95 95];
+goal  = [95 95];
 
 end

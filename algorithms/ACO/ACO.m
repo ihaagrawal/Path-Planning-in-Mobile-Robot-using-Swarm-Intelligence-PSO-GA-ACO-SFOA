@@ -3,15 +3,14 @@ function [bestPath, metrics] = ACO(map, start, goal)
 %% PARAMETERS
 numAnts = 30;
 maxIter = 100;
-numWaypoints = 3;
+numWaypoints = 4;
 
 gridSize = size(map,1);
 dim = numWaypoints * 2;
 
-alpha = 1;     % pheromone importance
-beta  = 2;     % heuristic importance
-rho   = 0.1;   % evaporation rate
-Q     = 1;     % pheromone deposit constant
+alpha = 1;
+rho   = 0.1;
+Q     = 1;
 
 %% INITIALIZATION
 pheromone = ones(1, dim);
@@ -28,7 +27,6 @@ for iter = 1:maxIter
 
     for i = 1:numAnts
 
-        % Generate new solution biased by pheromone
         prob = pheromone.^alpha;
         prob = prob ./ sum(prob);
 
@@ -42,32 +40,24 @@ for iter = 1:maxIter
             end
         end
 
-        % Bound control
         newSol = max(min(newSol,gridSize),1);
 
-        % Evaluate
         fitness(i) = evaluateFitness(newSol, map, start, goal);
-
         solutions(i,:) = newSol;
 
-        % Update global best
         if fitness(i) < bestFitness
             bestFitness = fitness(i);
             bestSol = newSol;
         end
-
     end
 
-    % Evaporation
     pheromone = (1 - rho) * pheromone;
 
-    % Deposit pheromone (better solutions deposit more)
     for i = 1:numAnts
         pheromone = pheromone + Q / (fitness(i) + 1e-6);
     end
 
     convergence(iter) = bestFitness;
-
 end
 
 bestPath = bestSol;
